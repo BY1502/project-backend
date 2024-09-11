@@ -19,7 +19,9 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
     console.log(req.user.email);
-    res.redirect('http://localhost:3000/googleinfo?email=' + req.user.email);
+    res.redirect(
+      'https://aiccfront.gunu110.com/googleinfo?email=' + req.user.email
+    );
   }
 );
 

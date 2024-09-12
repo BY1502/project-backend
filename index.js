@@ -65,6 +65,10 @@ app.use('/api/mypage', userRoutes);
 app.use('/login', require('./routes/loginroutes'));
 app.use('/signup', require('./routes/signUproutes'));
 
+app.get('/', (request, response) => {
+  response.send('aiccback.gunu110.com OK');
+});
+
 // kakao();
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`);

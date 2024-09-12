@@ -29,12 +29,12 @@ app.use((req, res, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use(
-//   cors({
-//     origin: "http://localhost:3000",
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: 'https://aiccfront.gunu110.com',
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());

@@ -25,7 +25,7 @@ router.get(
   }
 );
 
-router.post('/auth/googleinfo', async (req, res) => {
+router.post('/googleinfo', async (req, res) => {
   const { password, contact, email } = req.body;
   console.log('email = ' + email);
 

@@ -25,34 +25,31 @@ router.get(
   }
 );
 
-router.post(
-  'https://aiccfront.gunu110.com/auth/googleinfo',
-  async (req, res) => {
-    const { password, contact, email } = req.body;
-    console.log('email = ' + email);
+router.post('/auth/googleinfo', async (req, res) => {
+  const { password, contact, email } = req.body;
+  console.log('email = ' + email);
 
-    try {
-      const user_key = 'basket_key';
-      const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const user_key = 'basket_key';
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-      // 데이터베이스 업데이트
-      const result = await pool.query(
-        `UPDATE aicc_5team 
+    // 데이터베이스 업데이트
+    const result = await pool.query(
+      `UPDATE aicc_5team 
       SET user_key = $1, password = $2, phone_number = $3 
       WHERE email = $4 
       RETURNING *`,
-        [user_key, hashedPassword, contact, email]
-      );
+      [user_key, hashedPassword, contact, email]
+    );
 
-      res.status(200).json({
-        message: '구글로 회원가입이 완료되었습니다.',
-        user: result.rows[0],
-      });
-    } catch (error) {
-      console.error('Database error:', error.stack); // 오류 메시지 출력
-      res.status(500).json({ message: '서버 오류', error: error.message });
-    }
+    res.status(200).json({
+      message: '구글로 회원가입이 완료되었습니다.',
+      user: result.rows[0],
+    });
+  } catch (error) {
+    console.error('Database error:', error.stack); // 오류 메시지 출력
+    res.status(500).json({ message: '서버 오류', error: error.message });
   }
-);
+});
 
 module.exports = router;

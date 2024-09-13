@@ -6,9 +6,9 @@ exports.checkBasket = async (req, res, next) => {
     const authData = req.cookies.authData;
 
     // authData가 undefined인 경우 처리
-    if (!authData) {
-      return res.status(401).json({ message: '인증 정보가 없습니다.' });
-    }
+    // if (!authData) {
+    //   return res.status(401).json({ message: '인증 정보가 없습니다.' });
+    // }
 
     const parsedAuthData = JSON.parse(authData);
 

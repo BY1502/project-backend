@@ -23,7 +23,7 @@ exports.checkBasket = async (req, res, next) => {
       });
     }
 
-    next(); // 권한이 있는 경우 다음 미들웨어로 이동
+    // next(); // 권한이 있는 경우 다음 미들웨어로 이동
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -32,9 +32,9 @@ exports.checkBasket = async (req, res, next) => {
 // 장바구니 추가
 
 exports.addToBasket = async (req, res) => {
-  console.log('Session:', req.session);
-  console.log('Cookies:', req.cookies);
-  console.log('Authorization header:', req.headers.authorization);
+  // console.log('Session:', req.session);
+  // console.log('Cookies:', req.cookies);
+  // console.log('Authorization header:', req.headers.authorization);
   const authData = JSON.parse(req.cookies.authData);
   const email = authData.email;
   // console.log('이메일값 :', email);

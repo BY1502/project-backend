@@ -6,9 +6,9 @@ exports.checkBasket = async (req, res, next) => {
     const authData = req.cookies.authData;
 
     // authData가 undefined인 경우 처리
-    // if (!authData) {
-    //   return res.status(401).json({ message: '인증 정보가 없습니다.' });
-    // }
+    if (!authData) {
+      return res.status(401).json({ message: '인증 정보가 없습니다.' });
+    }
 
     const parsedAuthData = JSON.parse(authData);
 
@@ -23,37 +23,24 @@ exports.checkBasket = async (req, res, next) => {
       });
     }
 
-    // next(); // 권한이 있는 경우 다음 미들웨어로 이동
+    next(); // 권한이 있는 경우 다음 미들웨어로 이동
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
 // 장바구니 추가
+
 exports.addToBasket = async (req, res) => {
+  // console.log('Session:', req.session);
+  // console.log('Cookies:', req.cookies);
+  // console.log('Authorization header:', req.headers.authorization);
+  const authData = JSON.parse(req.cookies.authData);
+  const email = authData.email;
+  // console.log('이메일값 :', email);
   try {
-    // 쿠키가 있는지 확인
-    if (!req.cookies || !req.cookies.authData) {
-      return res.status(401).json({ message: '로그인이 필요합니다.' });
-    }
-
-    // 쿠키 파싱 및 오류 처리
-    let authData;
-    try {
-      authData = JSON.parse(req.cookies.authData);
-    } catch (error) {
-      return res.status(400).json({ message: '잘못된 인증 정보입니다.' });
-    }
-
-    const email = authData.email;
     const { productid } = req.body;
 
-    // productid가 없는 경우 처리
-    if (!productid) {
-      return res.status(400).json({ message: '상품 ID가 누락되었습니다.' });
-    }
-
-    // 데이터베이스에서 상품 중복 확인
     const checkExist = await database.query(
       'SELECT * FROM basket WHERE email = $1 AND productid = $2',
       [email, productid]
@@ -65,7 +52,6 @@ exports.addToBasket = async (req, res) => {
         .json({ message: '이미 장바구니에 있는 상품입니다.' });
     }
 
-    // 장바구니에 상품 추가
     await database.query(
       'INSERT INTO basket (email, productid) VALUES ($1, $2)',
       [email, productid]
@@ -73,51 +59,12 @@ exports.addToBasket = async (req, res) => {
 
     res.status(201).json({ message: '상품이 장바구니에 추가되었습니다.' });
   } catch (error) {
-    console.error('Error adding to basket:', error); // 구체적인 오류 확인
+    console.error('Error adding to basket:', error);
     res
       .status(500)
       .json({ message: '서버 오류: 장바구니에 상품을 추가할 수 없습니다.' });
   }
 };
-
-// exports.addToBasket = async (req, res) => {
-//   // console.log('Session:', req.session);
-//   // console.log('Cookies:', req.cookies);
-//   // console.log('Authorization header:', req.headers.authorization);
-//   const authData = JSON.parse(req.cookies.authData);
-//   const email = authData.email;
-//   // console.log('이메일값 :', email);
-//   try {
-//     if (!req.cookies || !req.cookies.authData) {
-//       return res.status(401).json({ message: '로그인이 필요합니다.' });
-//     }
-
-//     const { productid } = req.body;
-
-//     const checkExist = await database.query(
-//       'SELECT * FROM basket WHERE email = $1 AND productid = $2',
-//       [email, productid]
-//     );
-
-//     if (checkExist.rows.length > 0) {
-//       return res
-//         .status(409)
-//         .json({ message: '이미 장바구니에 있는 상품입니다.' });
-//     }
-
-//     await database.query(
-//       'INSERT INTO basket (email, productid) VALUES ($1, $2)',
-//       [email, productid]
-//     );
-
-//     res.status(201).json({ message: '상품이 장바구니에 추가되었습니다.' });
-//   } catch (error) {
-//     console.error('Error adding to basket:', error);
-//     res
-//       .status(500)
-//       .json({ message: '서버 오류: 장바구니에 상품을 추가할 수 없습니다.' });
-//   }
-// };
 
 // 사용자 별 장바구니 조회
 exports.getBasket = async (req, res) => {

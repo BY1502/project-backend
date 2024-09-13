@@ -8,7 +8,7 @@ const {
 
 router.post('/check', checkBasket);
 // 장바구니에 상품 추가
-router.post('/add-to-basket', checkBasket, addToBasket);
+router.post('/add-to-basket', addToBasket);
 
 // 장바구니 조회
 router.get('/basket', checkBasket, getBasket);

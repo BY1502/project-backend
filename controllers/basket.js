@@ -39,6 +39,10 @@ exports.addToBasket = async (req, res) => {
   const email = authData.email;
   // console.log('이메일값 :', email);
   try {
+    if (!req.cookies || !req.cookies.authData) {
+      return res.status(401).json({ message: '로그인이 필요합니다.' });
+    }
+
     const { productid } = req.body;
 
     const checkExist = await database.query(

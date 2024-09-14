@@ -13,19 +13,19 @@ const userRoutes = require('./routes/mypageroutes');
 // const router = express.Router();
 // const kakao = require('./controllers/kakao');
 
-app.use(
-  session({
-    secret: process.env.SECRET_KEY,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: true,
-      httpOnly: true,
-      sameSite: 'None',
-      maxAge: 24 * 60 * 60 * 1000,
-    },
-  })
-);
+// app.use(
+//   session({
+//     secret: process.env.SECRET_KEY,
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       secure: true,
+//       httpOnly: true,
+//       sameSite: 'None',
+//       maxAge: 24 * 60 * 60 * 1000,
+//     },
+//   })
+// );
 
 app.use((req, res, next) => {
   next();

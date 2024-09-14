@@ -26,14 +26,6 @@ app.use(
     },
   })
 );
-
-app.use((req, res, next) => {
-  next();
-});
-// Passport 초기화
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.use(
   cors({
     origin: 'https://aiccfront.gunu110.com',
@@ -41,9 +33,16 @@ app.use(
   })
 );
 
+// Passport 초기화
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.json());
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+  next();
+});
 app.use('/auth', authRoutes); // 구글 라우트
 app.use('/api', productRoutes); // 상품 라우트
 app.use('/img/back/img', express.static(path.join(__dirname, '/img')));

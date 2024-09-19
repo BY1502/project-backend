@@ -18,12 +18,6 @@ app.use(
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      secure: true,
-      httpOnly: true,
-      sameSite: 'None',
-      maxAge: 24 * 60 * 60 * 1000,
-    },
   })
 );
 app.use(
@@ -41,6 +35,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use((req, res, next) => {
+  res.cookie('authData', token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+  });
   next();
 });
 app.use('/auth', authRoutes); // 구글 라우트

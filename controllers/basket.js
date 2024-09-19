@@ -3,7 +3,7 @@ const database = require('../database/database');
 // 장바구니 권한 조회
 exports.checkBasket = async (req, res, next) => {
   try {
-    const authData = req.body.authData;
+    const authData = req.cookies.authData;
 
     // authData가 undefined인 경우 처리
     if (!authData) {
@@ -32,9 +32,6 @@ exports.checkBasket = async (req, res, next) => {
 // 장바구니 추가
 
 exports.addToBasket = async (req, res) => {
-  // console.log('Session:', req.session);
-  // console.log('Cookies:', req.cookies);
-  // console.log('Authorization header:', req.headers.authorization);
   const authData = JSON.parse(req.cookies.authData);
   const email = authData.email;
   // console.log('이메일값 :', email);

@@ -41,11 +41,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use((req, res, next) => {
-  res.cookie({
-    httpOnly: true,
-    secure: true,
-    sameSite: 'None',
-  });
   next();
 });
 app.use('/auth', authRoutes); // 구글 라우트

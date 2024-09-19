@@ -1,23 +1,20 @@
 const database = require('../database/database');
-const jwt = require('jsonwebtoken');
 
+// 장바구니 권한 조회
 exports.checkBasket = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
-    let authData;
+    const authData = req.body.authData;
 
-    if (authHeader) {
-      const token = authHeader.split(' ')[1]; // Bearer 토큰 분리
-      authData = jwt.verify(token, process.env.SECRET_KEY); // 토큰 검증
-    } else if (req.cookies.authData) {
-      authData = JSON.parse(req.cookies.authData); // 쿠키에서 authData 가져오기
-    } else {
+    // authData가 undefined인 경우 처리
+    if (!authData) {
       return res.status(401).json({ message: '인증 정보가 없습니다.' });
     }
 
+    const parsedAuthData = JSON.parse(authData);
+
     const result = await database.query(
       'SELECT user_key FROM aicc_5team WHERE email = $1',
-      [authData.email]
+      [parsedAuthData.email]
     );
 
     if (result.rows.length === 0 || result.rows[0].user_key !== 'basket_key') {

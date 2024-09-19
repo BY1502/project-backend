@@ -41,7 +41,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use((req, res, next) => {
-  res.cookie(authData, {
+  res.cookie({
     httpOnly: true,
     secure: true,
     sameSite: 'None',

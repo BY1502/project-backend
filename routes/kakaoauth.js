@@ -1,31 +1,22 @@
-// const passport = require('../controllers/kakao');
-// const bcrypt = require('bcrypt');
-// const pool = require('../database/database');
+const express = require('express');
+const passport = require('passport');
+require('../controllers/kakao')(); // 카카오 전략 초기화
 
-// router.get('/kakao/auth', isNotLoggedIn, passport.authenticate('kakao'));
+const router = express.Router();
 
-// router.get(
-//   '/kakao/callback',
-//   passport.authenticate('kakao', {
-//     failureRedirect: '/', // 로그인 실패 후 프론트엔드로 리다이렉트
-//   }),
-//   (req, res) => {
-//     res.redirect(process.env.FRONT_END_DOMAIN); // 로그인 성공후 프론트엔드로 리다이렉트
-//   }
-// );
+// 카카오 로그인 라우트 (카카오로 리디렉션)
+router.get('/kakao', passport.authenticate('kakao'));
 
-// module.exports = () => {
-//   passport.serializeUser((user, done) => {
-//     done(null, user.id);
-//   });
+// 카카오 로그인 콜백 처리 라우트
+router.get(
+  '/kakao/callback',
+  passport.authenticate('kakao', {
+    failureRedirect: '/login', // 로그인 실패 시 리디렉션할 경로
+  }),
+  (req, res) => {
+    // 로그인 성공 시 리디렉션할 경로
+    res.redirect('/');
+  }
+);
 
-//   passport.deserializeUse(async (id, done) => {
-//     try {
-//       await User.fineOne({ where: { id } });
-//       done(null, user); //req.user
-//     } catch (error) {
-//       console.error(error);
-//       done(error);
-//     }
-//   });
-// };
+module.exports = router;

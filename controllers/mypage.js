@@ -4,10 +4,10 @@ const bcrypt = require('bcrypt');
 // 유저 정보 조회
 exports.getUserInfo = async (req, res) => {
   try {
-    const { email } = req.body; // email을 요청 바디에서 가져옴
+    const email = req.query.email;
 
     if (!email) {
-      return res.status(400).json({ message: '이메일 정보가 없습니다.' });
+      return res.status(401).json({ message: '이메일이 필요합니다.' });
     }
 
     const result = await database.query(
@@ -31,11 +31,13 @@ exports.getUserInfo = async (req, res) => {
 // 비밀번호 확인 및 탈퇴
 exports.checkPassword = async (req, res) => {
   try {
-    const { email, password } = req.body; // email과 password를 요청 바디에서 가져옴
+    const email = req.query.email;
 
-    if (!email || !password) {
-      return res.status(400).json({ message: '필수 데이터가 없습니다.' });
+    if (!email) {
+      return res.status(401).json({ message: '이메일이 필요합니다.' });
     }
+
+    const { password } = req.body;
 
     const result = await database.query(
       'SELECT password FROM aicc_5team WHERE email = $1',
@@ -53,7 +55,6 @@ exports.checkPassword = async (req, res) => {
       return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
     }
 
-    // 비밀번호가 일치하면 OK 응답을 반환
     res.status(200).json({ message: '비밀번호가 확인되었습니다.' });
   } catch (error) {
     console.error('Error checking password:', error);
@@ -65,10 +66,10 @@ exports.checkPassword = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   try {
-    const { email } = req.body; // email을 요청 바디에서 가져옴
+    const email = req.query.email;
 
     if (!email) {
-      return res.status(400).json({ message: '이메일 정보가 없습니다.' });
+      return res.status(401).json({ message: '이메일이 필요합니다.' });
     }
 
     // 회원 탈퇴 처리

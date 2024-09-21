@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 // 유저 정보 조회
 exports.getUserInfo = async (req, res) => {
   try {
-    const email = req.query.email;
+    const { email } = req.query; // 쿠키 대신 쿼리 파라미터로 이메일을 받음
 
     if (!email) {
       return res.status(401).json({ message: '이메일이 필요합니다.' });
@@ -31,13 +31,13 @@ exports.getUserInfo = async (req, res) => {
 // 비밀번호 확인 및 탈퇴
 exports.checkPassword = async (req, res) => {
   try {
-    const email = req.query.email;
+    const { email, password } = req.body; // 이메일과 비밀번호를 요청 본문에서 받음
 
-    if (!email) {
-      return res.status(401).json({ message: '이메일이 필요합니다.' });
+    if (!email || !password) {
+      return res
+        .status(401)
+        .json({ message: '이메일과 비밀번호가 필요합니다.' });
     }
-
-    const { password } = req.body;
 
     const result = await database.query(
       'SELECT password FROM aicc_5team WHERE email = $1',
@@ -66,13 +66,12 @@ exports.checkPassword = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   try {
-    const email = req.query.email;
+    const { email } = req.body; // 이메일을 요청 본문에서 받음
 
     if (!email) {
       return res.status(401).json({ message: '이메일이 필요합니다.' });
     }
 
-    // 회원 탈퇴 처리
     await database.query('DELETE FROM aicc_5team WHERE email = $1', [email]);
 
     res.status(200).json({ message: '회원 탈퇴가 완료되었습니다.' });

@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 // 유저 정보 조회
 exports.getUserInfo = async (req, res) => {
   try {
-    const { email } = req.query; // 쿠키 대신 쿼리 파라미터로 이메일을 받음
+    const { email } = req.params;
 
     if (!email) {
       return res.status(401).json({ message: '이메일이 필요합니다.' });

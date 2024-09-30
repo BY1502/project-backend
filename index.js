@@ -12,6 +12,48 @@ const basketController = require('./controllers/basket');
 const userRoutes = require('./routes/mypageroutes');
 // const router = express.Router();
 // const kakao = require('./controllers/kakao');
+// 파이썬 테스트 코드 시작
+const { spawn } = require('child_process');
+// const path = require('path');
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
+// '/test' 엔드포인트 설정
+app.post('/test', (req, res) => {
+  const sendQuestion = req.body.question;
+
+  // Python 스크립트의 경로 설정 (절대 경로)
+  // const pythonPath = path.join(__dirname, 'chat', 'bin', 'python');
+  // const pythonPath = '/opt/homebrew/bin/python3';
+  const pythonPath = '/Users/shimgeon-u/test/team_project/back/test/bin/python'; // 가상환경의 Python 경로
+  const scriptPath = path.join(__dirname, 'test.py');
+
+  // 파이썬 스크립트를 실행하여 질문을 전달
+  const pythonProcess = spawn(pythonPath, [scriptPath, sendQuestion]);
+
+  let output = '';
+
+  // Python 스크립트의 stdout을 받아서 처리
+  pythonProcess.stdout.on('data', (data) => {
+    output += data.toString();
+  });
+
+  // 파이썬 프로세스가 완료된 후 응답 처리
+  pythonProcess.on('close', (code) => {
+    if (code === 0) {
+      res.send({ response: output });
+    } else {
+      res.status(500).send('Python script failed');
+    }
+  });
+
+  // 파이썬 스크립트의 stderr 처리
+  pythonProcess.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+});
+// 파이썬 테스트 코드 끝
 
 app.use(
   session({

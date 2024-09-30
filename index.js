@@ -26,7 +26,7 @@ app.post('/test', (req, res) => {
   // Python 스크립트의 경로 설정 (절대 경로)
   // const pythonPath = path.join(__dirname, 'chat', 'bin', 'python');
   // const pythonPath = '/opt/homebrew/bin/python3';
-  const pythonPath = '/Users/shimgeon-u/test/team_project/back/test/bin/python'; // 가상환경의 Python 경로
+  const pythonPath = '/Users/shimgeon-u/test/team_project/back/venv/bin/python'; // 가상환경의 Python 경로
   const scriptPath = path.join(__dirname, 'test.py');
 
   // 파이썬 스크립트를 실행하여 질문을 전달

@@ -19,6 +19,33 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
+app.use(
+  session({
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: true,
+      httpOnly: true,
+      sameSite: 'None',
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  })
+);
+app.use(
+  cors({
+    origin: 'https://aiccfront.gunu110.com',
+    credentials: true,
+  })
+);
+
+// Passport 초기화
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(express.json());
+app.use(cookieParser());
+
 // '/test' 엔드포인트 설정
 app.post('/test', (req, res) => {
   const sendQuestion = req.body.question;
@@ -54,33 +81,6 @@ app.post('/test', (req, res) => {
   });
 });
 // 파이썬 테스트 코드 끝
-
-app.use(
-  session({
-    secret: process.env.SECRET_KEY,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: true,
-      httpOnly: true,
-      sameSite: 'None',
-      maxAge: 24 * 60 * 60 * 1000,
-    },
-  })
-);
-app.use(
-  cors({
-    origin: 'https://aiccfront.gunu110.com',
-    credentials: true,
-  })
-);
-
-// Passport 초기화
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use(express.json());
-app.use(cookieParser());
 
 app.use((req, res, next) => {
   next();
